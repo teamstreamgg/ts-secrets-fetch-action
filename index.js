@@ -10,6 +10,7 @@ if (process.env.NODE_ENV === "development" && process.env.DOPPLER_TOKEN) {
 
 const DOPPLER_META = ["DOPPLER_PROJECT", "DOPPLER_CONFIG", "DOPPLER_ENVIRONMENT"];
 const DOPPLER_TOKEN = core.getInput("doppler-token", { required: true });
+const GITHUB_EVENT_NUMBER = core.getInput("github-event-number", { required: true });
 core.setSecret(DOPPLER_TOKEN);
 
 const IS_SA_TOKEN = DOPPLER_TOKEN.startsWith("dp.sa.");
@@ -26,14 +27,28 @@ if (IS_SA_TOKEN && !(DOPPLER_PROJECT && DOPPLER_CONFIG)) {
 }
 
 const secrets = await fetch(DOPPLER_TOKEN, DOPPLER_PROJECT, DOPPLER_CONFIG);
-const secretsToRemove = ["TEAMSTREAM_API_ENDPOINT", "TEAMSTREAM_WEB_ENDPOINT"]
 
 let formattedSecrets = '';
 for (const [key, value] of Object.entries(secrets)) {
-  if (!secretsToRemove.includes(key) && !DOPPLER_META.includes(key)) {
-      formattedSecrets += `${key}='${value}' `;
-      core.setSecret(value);
+  if(key === "TEAMSTREAM_API_ENDPOINT") {
+    value = `https://pr-${{ GITHUB_EVENT_NUMBER }}-teamstreamgg-teamstream.fly.dev/api`
   }
 
-  core.setOutput('secrets', formattedSecrets.trim());
+  if(key === "TEAMSTREAM_API_ENDPOINT") {
+    value = `https://pr-${{ GITHUB_EVENT_NUMBER }}-teamstreamgg-teamstream.fly.dev`
+  }
+
+
+  if (!DOPPLER_META.includes(key)) {
+    formattedSecrets += `${key}='${value}' `;
+    core.setSecret(value);
+    core.setOutput(key, value);
+  }
+
+  core.setOutput('formattedSecrets', formattedSecrets.trim());
+
+  if (core.getInput("inject-env-vars") === "true") {
+    core.exportVariable(key, value);
+  }
+
 }
