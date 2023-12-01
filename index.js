@@ -26,14 +26,14 @@ if (IS_SA_TOKEN && !(DOPPLER_PROJECT && DOPPLER_CONFIG)) {
 }
 
 const secrets = await fetch(DOPPLER_TOKEN, DOPPLER_PROJECT, DOPPLER_CONFIG);
+const secretsToRemove = ["TEAMSTREAM_API_ENDPOINT", "TEAMSTREAM_WEB_ENDPOINT"]
 
+let formattedSecrets = '';
 for (const [key, value] of Object.entries(secrets)) {
-  core.setOutput(key, value);
-  if (!DOPPLER_META.includes(key)) {
-    core.setSecret(value);
+  if (!secretsToRemove.includes(key) && !DOPPLER_META.includes(key)) {
+      formattedSecrets += `${key}='${value}' `;
+      core.setSecret(value);
   }
 
-  if (core.getInput("inject-env-vars") === "true") {
-    core.exportVariable(key, value);
-  }
+  core.setOutput('secrets', formattedSecrets.trim());
 }
