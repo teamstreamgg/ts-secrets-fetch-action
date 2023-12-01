@@ -41,7 +41,7 @@ for (const [key, value] of Object.entries(secrets)) {
 
 
   if (!DOPPLER_META.includes(key)) {
-    formattedSecrets += `${key}='${currentValue}' `;
+    formattedSecrets += `${key}=${currentValue} `;
     // core.setSecret(currentValue);
     core.setOutput(key, currentValue);
   }
