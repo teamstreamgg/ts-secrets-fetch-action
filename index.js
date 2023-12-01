@@ -35,7 +35,7 @@ for (const [key, value] of Object.entries(secrets)) {
     currentValue = `https://pr-${ GITHUB_EVENT_NUMBER }-teamstreamgg-teamstream.fly.dev/api`
   }
 
-  if(key === "TEAMSTREAM_API_ENDPOINT") {
+  if(key === "TEAMSTREAM_WEB_ENDPOINT") {
     currentValue = `https://pr-${ GITHUB_EVENT_NUMBER }-teamstreamgg-teamstream.fly.dev`
   }
 
