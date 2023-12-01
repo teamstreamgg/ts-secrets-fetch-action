@@ -32,11 +32,11 @@ let formattedSecrets = '';
 for (const [key, value] of Object.entries(secrets)) {
   let currentValue = value
   if(key === "TEAMSTREAM_API_ENDPOINT") {
-    currentValue = `https://pr-${{ GITHUB_EVENT_NUMBER }}-teamstreamgg-teamstream.fly.dev/api`
+    currentValue = `https://pr-${ GITHUB_EVENT_NUMBER }-teamstreamgg-teamstream.fly.dev/api`
   }
 
   if(key === "TEAMSTREAM_API_ENDPOINT") {
-    currentValue = `https://pr-${{ GITHUB_EVENT_NUMBER }}-teamstreamgg-teamstream.fly.dev`
+    currentValue = `https://pr-${ GITHUB_EVENT_NUMBER }-teamstreamgg-teamstream.fly.dev`
   }
 
 
