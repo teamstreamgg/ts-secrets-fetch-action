@@ -17,6 +17,10 @@ inputs:
     description: >-
       Doppler Config slug (e.g. prd)
     required: false
+  github-event-number:
+    description: >-
+      Github event number (github.event.number)
+    required: true
   inject-env-vars:
     description: >-
       Inject secrets as environment variables for subsequent steps if set to `true`.
