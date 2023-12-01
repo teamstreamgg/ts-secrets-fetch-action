@@ -30,25 +30,26 @@ const secrets = await fetch(DOPPLER_TOKEN, DOPPLER_PROJECT, DOPPLER_CONFIG);
 
 let formattedSecrets = '';
 for (const [key, value] of Object.entries(secrets)) {
+  let currentValue = value
   if(key === "TEAMSTREAM_API_ENDPOINT") {
-    value = `https://pr-${{ GITHUB_EVENT_NUMBER }}-teamstreamgg-teamstream.fly.dev/api`
+    currentValue = `https://pr-${{ GITHUB_EVENT_NUMBER }}-teamstreamgg-teamstream.fly.dev/api`
   }
 
   if(key === "TEAMSTREAM_API_ENDPOINT") {
-    value = `https://pr-${{ GITHUB_EVENT_NUMBER }}-teamstreamgg-teamstream.fly.dev`
+    currentValue = `https://pr-${{ GITHUB_EVENT_NUMBER }}-teamstreamgg-teamstream.fly.dev`
   }
 
 
   if (!DOPPLER_META.includes(key)) {
-    formattedSecrets += `${key}='${value}' `;
-    core.setSecret(value);
-    core.setOutput(key, value);
+    formattedSecrets += `${key}='${currentValue}' `;
+    core.setSecret(currentValue);
+    core.setOutput(key, currentValue);
   }
 
   core.setOutput('formattedSecrets', formattedSecrets.trim());
 
   if (core.getInput("inject-env-vars") === "true") {
-    core.exportVariable(key, value);
+    core.exportVariable(key, currentValue);
   }
 
 }
